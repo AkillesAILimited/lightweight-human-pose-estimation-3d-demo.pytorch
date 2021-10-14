@@ -1,0 +1,15 @@
+conda create -n pose-estimation python=3.8
+pip install -r requirements.txt
+python setup.py build_ext => opencv4
+
+### 
+source /usr/local/
+conda activate pose-estimation
+opencv: WITH_INF_ENGINE
+opencv: WITH_NGRAPH
+
+
+python scripts/convert_to_onnx.py --checkpoint-path human-pose-estimation-3d.pth
+
+
+*** export PYTHONPATH=pose_extractor/build/:$PWD:$PYTHONPATH
