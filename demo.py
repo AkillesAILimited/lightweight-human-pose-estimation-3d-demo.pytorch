@@ -90,7 +90,9 @@ if __name__ == '__main__':
         if frame is None:
             break
         input_scale = base_height / frame.shape[0]
-        scaled_img = cv2.resize(frame, dsize=None, fx=input_scale, fy=input_scale)
+        input_scaleY = 448 / frame.shape[1]
+        scaled_img = cv2.resize(frame, dsize=None, fx=input_scaleY, fy=input_scale)
+        print("scaled image:", scaled_img.shape)
         scaled_img = scaled_img[:, 0:scaled_img.shape[1] - (scaled_img.shape[1] % stride)]  # better to pad, but cut out for demo
         if fx < 0:  # Focal length is unknown
             fx = np.float32(0.8 * frame.shape[1])

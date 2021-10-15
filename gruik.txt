@@ -13,3 +13,7 @@ python scripts/convert_to_onnx.py --checkpoint-path human-pose-estimation-3d.pth
 
 
 *** export PYTHONPATH=pose_extractor/build/:$PWD:$PYTHONPATH
+python demo.py --model human-pose-estimation-3d.xml --device CPU --use-openvino --images image.png
+
+        inference_result = net.infer(scaled_img)
+        poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
