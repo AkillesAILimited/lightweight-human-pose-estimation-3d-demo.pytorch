@@ -1,0 +1,7 @@
+LICENSE
+README.md
+setup.py
+pose_extractor.egg-info/PKG-INFO
+pose_extractor.egg-info/SOURCES.txt
+pose_extractor.egg-info/dependency_links.txt
+pose_extractor.egg-info/top_level.txt

@@ -3,7 +3,8 @@ import numpy as np
 from modules.pose import Pose, propagate_ids
 try:
     from pose_extractor import extract_poses
-except:
+except Exception as e:
+    print(e)
     print('#### Cannot load fast pose extraction, switched to legacy slow implementation. ####')
     from modules.legacy_pose_extractor import extract_poses
 
@@ -24,10 +25,16 @@ def get_root_relative_poses(inference_results):
     features, heatmap, paf_map = inference_results
 
     upsample_ratio = 4
+    print(heatmap.shape, "heatmap[0:-1] shape = ", heatmap[0:-1].shape)
     found_poses = extract_poses(heatmap[0:-1], paf_map, upsample_ratio)[0]
+
+    print("poses", found_poses)
+
     # scale coordinates to features space
     found_poses[:, 0:-1:3] /= upsample_ratio
+    print("poses, scale #1", found_poses, upsample_ratio)
     found_poses[:, 1:-1:3] /= upsample_ratio
+    print("poses, scale #2", found_poses, upsample_ratio)
 
     poses_2d = []
     num_kpt_panoptic = 19

@@ -20,6 +20,7 @@ set(target_name pose_extractor)
 add_library(${target_name} SHARED wrapper.cpp
                                   src/extract_poses.hpp src/extract_poses.cpp
                                   src/human_pose.hpp src/human_pose.cpp
+                                  src/parse_poses.hpp src/parse_poses.cpp
                                   src/peak.hpp src/peak.cpp)
 target_include_directories(${target_name} PRIVATE src/ ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(${target_name} ${PYTHON_LIBRARIES} ${OpenCV_LIBS})

@@ -8,7 +8,7 @@ import numpy as np
 from modules.input_reader import VideoReader, ImageReader
 from modules.draw import Plotter3d, draw_poses
 from modules.parse_poses import parse_poses
-
+from pose_extractor import parse_poses_cpp
 
 def rotate_poses(poses_3d, R, t):
     R_inv = np.linalg.inv(R)
@@ -99,7 +99,8 @@ if __name__ == '__main__':
 
         inference_result = net.infer(scaled_img)
         print(inference_result[0].shape, inference_result[1].shape, inference_result[2].shape, type(inference_result[0]), type(inference_result[1]), type(inference_result[2]))
-        poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+        print(type(input_scale), type(stride), type(fx), type(is_video))
+        poses_3d, poses_2d = parse_poses_cpp(inference_result[0], inference_result[1], inference_result[2], input_scale, stride, fx, is_video)
         edges = []
         if len(poses_3d):
             poses_3d = rotate_poses(poses_3d, R, t)

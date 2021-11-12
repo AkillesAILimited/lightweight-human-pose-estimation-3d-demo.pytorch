@@ -11,6 +11,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "extract_poses.hpp"
+#include "parse_poses.hpp"
 
 static std::vector<cv::Mat> wrap_feature_maps(PyArrayObject* py_feature_maps) {
     int num_channels = static_cast<int>(PyArray_SHAPE(py_feature_maps)[0]);
@@ -25,6 +26,85 @@ static std::vector<cv::Mat> wrap_feature_maps(PyArrayObject* py_feature_maps) {
                                      PyArray_STRIDE(py_feature_maps, 1));
     }
     return feature_maps;
+}
+
+static PyObject* parse_poses_cpp(PyObject* self, PyObject* args) {
+
+    // poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+    // parsed_poses parse_poses(const cv::Mat &features, const cv::Mat &heatmap, const cv::Mat &paf_map, float input_scale, int stride, float fx, bool is_video=false);
+    // poses_3d, poses_2d = parse_poses_cpp(inference_result[0], inference_result[1], inference_result[2], input_scale, stride, fx, is_video)
+    // (57, 32, 56) (19, 32, 56) (38, 32, 56) <class 'numpy.ndarray'> <class 'numpy.ndarray'> <class 'numpy.ndarray'>
+    //    <class 'float'> <class 'int'> <class 'numpy.float32'> <class 'bool'>
+
+    std::cerr << "parse_poses_cpp(...)" << std::endl << std::flush;
+    PyArrayObject* py_feature_map = nullptr;
+    PyArrayObject* py_heatmap = nullptr;
+    PyArrayObject* py_paf_map = nullptr;
+
+    float input_scale;
+    int stride;
+    float fx;
+    int is_video;
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+    if (!PyArg_ParseTuple(args, "OOOfifp", &py_feature_map, &py_heatmap, &py_paf_map, &input_scale, &stride, &fx, &is_video))
+    {
+        throw std::runtime_error("passed non-numpy array as argument");
+    }
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+    cv::Mat features;
+    {
+        int x = static_cast<int>(PyArray_SHAPE(py_feature_map)[0]);
+        int y = static_cast<int>(PyArray_SHAPE(py_feature_map)[1]);
+        int z = static_cast<int>(PyArray_SHAPE(py_feature_map)[2]);
+        float* data = static_cast<float*>(PyArray_DATA(py_feature_map));
+        std::cerr << x << "," << y << "," << z << std::endl << std::flush;
+        int xyz[] = { x,y,z };
+        features = cv::Mat(3, xyz, CV_32FC1, data);
+    }
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+    cv::Mat heatmap;
+    {
+        int x = static_cast<int>(PyArray_SHAPE(py_heatmap)[0]);
+        int y = static_cast<int>(PyArray_SHAPE(py_heatmap)[1]);
+        int z = static_cast<int>(PyArray_SHAPE(py_heatmap)[2]);
+        float* data = static_cast<float*>(PyArray_DATA(py_heatmap));
+        std::cerr << x << "," << y << "," << z << std::endl << std::flush;
+        int xyz[] = { x,y,z };
+        heatmap = cv::Mat(3, xyz, CV_32FC1, data);
+    }
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+    cv::Mat paf_map;
+    {
+        int x = static_cast<int>(PyArray_SHAPE(py_paf_map)[0]);
+        int y = static_cast<int>(PyArray_SHAPE(py_paf_map)[1]);
+        int z = static_cast<int>(PyArray_SHAPE(py_paf_map)[2]);
+        float* data = static_cast<float*>(PyArray_DATA(py_paf_map));
+        std::cerr << x << "," << y << "," << z << std::endl << std::flush;
+        int xyz[] = { x,y,z };
+        paf_map = cv::Mat(3, xyz, CV_32FC1, data);
+    }
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+    //    feature_maps[c_id] = cv::Mat(h, w, CV_32FC1,
+    //                                 data + c_id * PyArray_STRIDE(py_feature_maps, 0) / sizeof(float),
+    //                                 PyArray_STRIDE(py_feature_maps, 1));
+
+    auto rv = human_pose_estimation::parse_poses(features, heatmap, paf_map, input_scale, stride, fx, is_video!=0);
+
+    std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
+
+
+
+    return nullptr;
 }
 
 static PyObject* extract_poses(PyObject* self, PyObject* args) {
@@ -67,6 +147,8 @@ static PyObject* extract_poses(PyObject* self, PyObject* args) {
 PyMethodDef method_table[] = {
     {"extract_poses", static_cast<PyCFunction>(extract_poses), METH_VARARGS,
      "Extracts 2d poses from provided heatmaps and pafs"},
+    {"parse_poses_cpp", static_cast<PyCFunction>(parse_poses_cpp), METH_VARARGS,
+     "Parse 2d/3d poses from ..."},     
     {NULL, NULL, 0, NULL}
 };
 

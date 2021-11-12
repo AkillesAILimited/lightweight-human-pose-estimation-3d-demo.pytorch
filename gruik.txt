@@ -4,6 +4,9 @@ python setup.py build_ext => opencv4
 
 ### 
 source /usr/local/
+en fait => /usr/local/setupvars.sh --pyver 3.8
+>>> (pose-estimation) esoteric@teucer:/usr/local/python$ sudo ln -svi python3.8/ python3
+
 conda activate pose-estimation
 opencv: WITH_INF_ENGINE
 opencv: WITH_NGRAPH
@@ -17,3 +20,51 @@ python demo.py --model human-pose-estimation-3d.xml --device CPU --use-openvino 
 
         inference_result = net.infer(scaled_img)
         poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+
+####
+python setup.py install && cp -fv pose_extractor/build/pose_extractor.so .
+
+#########
+
+running install
+running bdist_egg
+running egg_info
+writing pose_extractor.egg-info/PKG-INFO
+writing dependency_links to pose_extractor.egg-info/dependency_links.txt
+writing top-level names to pose_extractor.egg-info/top_level.txt
+package init file 'pose_extractor/__init__.py' not found (or not a regular file)
+reading manifest file 'pose_extractor.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'pose_extractor.egg-info/SOURCES.txt'
+installing library code to build/bdist.linux-x86_64/egg
+running install_lib
+running build_py
+running build_ext
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home2/esoteric/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor/build/tmp
+Scanning dependencies of target pose_extractor
+[ 20%] Building CXX object CMakeFiles/pose_extractor.dir/wrapper.cpp.o
+[ 40%] Linking CXX shared library ../pose_extractor.so
+[100%] Built target pose_extractor
+warning: install_lib: 'build/lib.linux-x86_64-3.8' does not exist -- no Python modules to install
+
+creating build/bdist.linux-x86_64/egg
+creating build/bdist.linux-x86_64/egg/EGG-INFO
+copying pose_extractor.egg-info/PKG-INFO -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying pose_extractor.egg-info/SOURCES.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying pose_extractor.egg-info/dependency_links.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying pose_extractor.egg-info/top_level.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+zip_safe flag not set; analyzing archive contents...
+creating 'dist/pose_extractor-1.0-py3.8-linux-x86_64.egg' and adding 'build/bdist.linux-x86_64/egg' to it
+removing 'build/bdist.linux-x86_64/egg' (and everything under it)
+Processing pose_extractor-1.0-py3.8-linux-x86_64.egg
+Removing /home/esoteric/anaconda3/envs/pose-estimation/lib/python3.8/site-packages/pose_extractor-1.0-py3.8-linux-x86_64.egg
+Copying pose_extractor-1.0-py3.8-linux-x86_64.egg to /home/esoteric/anaconda3/envs/pose-estimation/lib/python3.8/site-packages
+pose-extractor 1.0 is already the active version in easy-install.pth
+
+Installed /home/esoteric/anaconda3/envs/pose-estimation/lib/python3.8/site-packages/pose_extractor-1.0-py3.8-linux-x86_64.egg
+Processing dependencies for pose-extractor==1.0
+Finished processing dependencies for pose-extractor==1.0
+'pose_extractor/build/pose_extractor.so' -> './pose_extractor.so'
+(pose-estimation) esoteric@teucer:~/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch$ 
