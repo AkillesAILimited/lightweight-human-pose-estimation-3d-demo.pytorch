@@ -100,6 +100,9 @@ if __name__ == '__main__':
         inference_result = net.infer(scaled_img)
         print(inference_result[0].shape, inference_result[1].shape, inference_result[2].shape, type(inference_result[0]), type(inference_result[1]), type(inference_result[2]))
         poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
+
+        print("final res", poses_3d, poses_2d)
+
         edges = []
         if len(poses_3d):
             poses_3d = rotate_poses(poses_3d, R, t)

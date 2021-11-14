@@ -175,8 +175,9 @@ def parse_poses(inference_results, input_scale, stride, fx, is_video=False):
         denominator = np.sqrt(np.trace(np.dot((pose_2d_valid[:2, :] - mean_2d[:2, :]).transpose(),
                                               pose_2d_valid[:2, :] - mean_2d[:2, :])).sum())
 
-        print("denomiator", denominator)
+        print("denominator", denominator)
 
+        print("f/i/s",fx, input_scale, stride)
         mean_2d = np.array([mean_2d[0, 0], mean_2d[1, 0], fx * input_scale / stride])
 
         print("mean_2d", mean_2d)

@@ -101,6 +101,9 @@ if __name__ == '__main__':
         print(inference_result[0].shape, inference_result[1].shape, inference_result[2].shape, type(inference_result[0]), type(inference_result[1]), type(inference_result[2]))
         print(type(input_scale), type(stride), type(fx), type(is_video))
         poses_3d, poses_2d = parse_poses_cpp(inference_result[0], inference_result[1], inference_result[2], input_scale, stride, fx, is_video)
+
+        print("final res", poses_3d, poses_2d)
+
         edges = []
         if len(poses_3d):
             poses_3d = rotate_poses(poses_3d, R, t)
