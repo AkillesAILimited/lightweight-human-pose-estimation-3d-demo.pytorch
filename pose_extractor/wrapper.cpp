@@ -28,6 +28,9 @@ static std::vector<cv::Mat> wrap_feature_maps(PyArrayObject* py_feature_maps) {
     return feature_maps;
 }
 
+std::vector<human_pose_estimation::Pose> previous_poses_2d;
+human_pose_estimation::PoseCommon common;
+
 static PyObject* parse_poses_cpp(PyObject* self, PyObject* args) {
 
     // poses_3d, poses_2d = parse_poses(inference_result, input_scale, stride, fx, is_video)
@@ -98,7 +101,7 @@ static PyObject* parse_poses_cpp(PyObject* self, PyObject* args) {
     //                                 data + c_id * PyArray_STRIDE(py_feature_maps, 0) / sizeof(float),
     //                                 PyArray_STRIDE(py_feature_maps, 1));
 
-    auto rv = human_pose_estimation::parse_poses(features, heatmap, paf_map, input_scale, stride, fx, is_video!=0);
+    auto rv = human_pose_estimation::parse_poses(previous_poses_2d, common, features, heatmap, paf_map, input_scale, stride, fx, is_video!=0);
 
     std::cerr << __FILE__ << ":" << __LINE__ << std::endl << std::flush;
 
