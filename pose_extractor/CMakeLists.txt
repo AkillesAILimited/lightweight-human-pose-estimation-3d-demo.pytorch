@@ -18,11 +18,14 @@ find_package(OpenCV 4 REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 set(target_name pose_extractor)
 add_library(${target_name} SHARED wrapper.cpp
-                                  src/extract_poses.hpp src/extract_poses.cpp
-                                  src/human_pose.hpp src/human_pose.cpp
-                                  src/parse_poses.hpp src/parse_poses.cpp
-                                  src/peak.hpp src/peak.cpp)
-target_include_directories(${target_name} PRIVATE src/ ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
+                                  #src/extract_poses.hpp src/extract_poses.cpp
+                                  #src/human_pose.hpp src/human_pose.cpp
+                                  #src/parse_poses.hpp src/parse_poses.cpp
+                                  #src/peak.hpp src/peak.cpp
+                                  packed/human_poses.cpp
+                                  packed/human_poses.hpp
+                                  )
+target_include_directories(${target_name} PRIVATE src/ packed/ ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(${target_name} ${PYTHON_LIBRARIES} ${OpenCV_LIBS})
 set_target_properties(${target_name} PROPERTIES PREFIX "" OUTPUT_NAME "${target_name}")
 if(WIN32)
