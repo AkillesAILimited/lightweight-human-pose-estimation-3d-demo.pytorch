@@ -10,7 +10,6 @@
 
 namespace human_pose_estimation {
 
-
 constexpr double pi = 3.14159265358979323846;
 
 inline float get_alpha(float rate = 30.0, float cutoff = 1) {
@@ -101,8 +100,6 @@ inline std::vector<int> int_vector(const std::vector<T> & v) {
 }
 
 struct Pose {
-
-
     std::vector<std::vector<float>> keypoints;
     std::vector<float> confidence;
 
@@ -211,37 +208,30 @@ inline void propagate_ids(PoseCommon & common, std::vector<Pose> & previous_pose
     :return: None
     */
 
-//std::cerr << "propagate_ids" << std::endl << std::flush;
-//exit(-1);
-
-    std::vector<int> current_poses_sorted_ids; // = list(range(len(current_poses)))
+    std::vector<int> current_poses_sorted_ids;
     for (int i=0; i< int(current_poses.size()); ++i) {
         current_poses_sorted_ids.push_back(i);
     }
     std::sort(current_poses_sorted_ids.begin(), current_poses_sorted_ids.end(), [&](int a, int b) {
         return current_poses[a].confidence > current_poses[b].confidence;
     });
-    // TODO remove
-    if (current_poses.size() > 0) {
-        assert(current_poses[0].confidence >= current_poses[1].confidence);
-    }
-    //current_poses_sorted_ids = sorted(
-    //    current_poses_sorted_ids, key=lambda pose_id: current_poses[pose_id].confidence, reverse=True)  # match confident poses first
-    // mask = np.ones(len(previous_poses), dtype=np.int32)
+
+    //if (current_poses.size() > 0) {
+    //    assert(current_poses[0].confidence >= current_poses[1].confidence);
+    //}
+
     std::vector<uint8_t> mask;
     for (int i=0; i< int(previous_poses.size()); ++i) {
         mask.push_back(1);
     }
-    //for current_pose_id in current_poses_sorted_ids:
+
     for (int current_pose_id_id = 0; current_pose_id_id < int(current_poses_sorted_ids.size()); ++current_pose_id_id){
         int current_pose_id = current_poses_sorted_ids[current_pose_id_id];
         int best_matched_id = -1; // None
         int best_matched_pose_id = -1; // None
         float best_matched_iou = 0;
-        //for previous_pose_id in range(len(previous_poses)):
+
         for (int previous_pose_id = 0; previous_pose_id < int(previous_poses.size()); ++ previous_pose_id) {
-            //if not mask[previous_pose_id]:
-            //    continue
             if (mask[previous_pose_id] == 0)
                 continue;
             float iou = get_similarity(common, current_poses[current_pose_id], previous_poses[previous_pose_id]);
@@ -251,10 +241,6 @@ inline void propagate_ids(PoseCommon & common, std::vector<Pose> & previous_pose
                 best_matched_id = previous_pose_id;
             }
         }
-        //if best_matched_iou >= threshold:
-        //    mask[best_matched_id] = 0
-        //else:  # pose not similar to any previous
-        //    best_matched_pose_id = None
         if (best_matched_iou >= threshold) {
             mask[best_matched_id] = 0;
         } else {
@@ -266,55 +252,6 @@ inline void propagate_ids(PoseCommon & common, std::vector<Pose> & previous_pose
         }
     }
 }
-/* TODO ...
-
-def get_similarity(a, b, threshold=0.5):
-    num_similar_kpt = 0
-    for kpt_id in range(Pose.num_kpts):
-        if a.keypoints[kpt_id, 0] != -1 and b.keypoints[kpt_id, 0] != -1:
-            distance = np.sum((a.keypoints[kpt_id] - b.keypoints[kpt_id]) ** 2)
-            area = max(a.bbox[2] * a.bbox[3], b.bbox[2] * b.bbox[3])
-            similarity = np.exp(-distance / (2 * (area + np.spacing(1)) * Pose.vars[kpt_id]))
-            if similarity > threshold:
-                num_similar_kpt += 1
-    return num_similar_kpt
-
-
-def propagate_ids(previous_poses, current_poses, threshold=3):
-    """Propagate poses ids from previous frame results. Id is propagated,
-    if there are at least `threshold` similar keypoints between pose from previous frame and current.
-
-    :param previous_poses: poses from previous frame with ids
-    :param current_poses: poses from current frame to assign ids
-    :param threshold: minimal number of similar keypoints between poses
-    :return: None
-    """
-    current_poses_sorted_ids = list(range(len(current_poses)))
-    current_poses_sorted_ids = sorted(
-        current_poses_sorted_ids, key=lambda pose_id: current_poses[pose_id].confidence, reverse=True)  # match confident poses first
-    mask = np.ones(len(previous_poses), dtype=np.int32)
-    for current_pose_id in current_poses_sorted_ids:
-        best_matched_id = None
-        best_matched_pose_id = None
-        best_matched_iou = 0
-        for previous_pose_id in range(len(previous_poses)):
-            if not mask[previous_pose_id]:
-                continue
-            iou = get_similarity(current_poses[current_pose_id], previous_poses[previous_pose_id])
-            if iou > best_matched_iou:
-                best_matched_iou = iou
-                best_matched_pose_id = previous_poses[previous_pose_id].id
-                best_matched_id = previous_pose_id
-        if best_matched_iou >= threshold:
-            mask[best_matched_id] = 0
-        else:  # pose not similar to any previous
-            best_matched_pose_id = None
-        current_poses[current_pose_id].update_id(best_matched_pose_id)
-        if best_matched_pose_id is not None:
-            current_poses[current_pose_id].translation_filter = previous_poses[best_matched_id].translation_filter
-
-*/
-
 
 struct HumanPose {
     HumanPose(const std::vector<cv::Point3f>& keypoints = std::vector<cv::Point3f>(),
@@ -324,4 +261,3 @@ struct HumanPose {
     float score;
 };
 } // namespace human_pose_estimation
-
