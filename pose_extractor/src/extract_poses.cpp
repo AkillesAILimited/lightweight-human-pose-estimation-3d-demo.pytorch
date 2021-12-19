@@ -59,4 +59,5 @@ std::vector<HumanPose> extractPoses(
                 foundMidPointsRatioThreshold, minJointsNumber, minSubsetScore);
     return poses;
 }
+
 } // namespace human_pose_estimation

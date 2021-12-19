@@ -1,7 +1,5 @@
 #include <vector>
-
 #include <opencv2/core/core.hpp>
-
 #include "human_pose.hpp"
 
 namespace human_pose_estimation {

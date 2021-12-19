@@ -68,6 +68,8 @@ def propagate_ids(previous_poses, current_poses, threshold=3):
     :param threshold: minimal number of similar keypoints between poses
     :return: None
     """
+
+    print("propagate ids")
     current_poses_sorted_ids = list(range(len(current_poses)))
     current_poses_sorted_ids = sorted(
         current_poses_sorted_ids, key=lambda pose_id: current_poses[pose_id].confidence, reverse=True)  # match confident poses first

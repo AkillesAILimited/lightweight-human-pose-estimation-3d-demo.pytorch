@@ -68,3 +68,8 @@ Processing dependencies for pose-extractor==1.0
 Finished processing dependencies for pose-extractor==1.0
 'pose_extractor/build/pose_extractor.so' -> './pose_extractor.so'
 (pose-estimation) esoteric@teucer:~/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch$ 
+
+####
+(pose-estimation) esoteric@teucer:~/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor/packed$ cat ../src/human_pose.hpp ../src/extract_poses.hpp ../src/peak.hpp ../src/parse_poses.hpp > human_poses.hpp
+(pose-estimation) esoteric@teucer:~/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor/packed$ cat ../src/human_pose.cpp ../src/extract_poses.cpp ../src/peak.cpp ../src/parse_poses.cpp > human_poses.cpp
+(pose-estimation) esoteric@teucer:~/work/AkillesAI/lightweight-human-pose-estimation-3d-demo.pytorch/pose_extractor/packed$ 
